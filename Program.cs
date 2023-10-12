@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -13,15 +14,15 @@ builder.Services.AddLogging(logging =>
         otl.SetResourceBuilder(
             ResourceBuilder
             .CreateDefault()
-            .AddService(DiagnosticsConfig.ServiceName))
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = DiagnosticsConfig.JaeggerEndpoint)
+            .AddService(OpenTelemetryConfig.ServiceName))
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     });
 });
 
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resourceBuilder =>
-        resourceBuilder.AddService(DiagnosticsConfig.ServiceName)
+        resourceBuilder.AddService(OpenTelemetryConfig.ServiceName)
     )
     .WithTracing(tracing =>
     {
@@ -29,15 +30,16 @@ builder.Services.AddOpenTelemetry()
         .AddSqlClientInstrumentation()
         .AddHttpClientInstrumentation()
         .AddEntityFrameworkCoreInstrumentation()
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = DiagnosticsConfig.JaeggerEndpoint)
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     })
     .WithMetrics(metrics =>
     {
         metrics.AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
-        .AddMeter(DiagnosticsConfig.Meter.Name)
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = DiagnosticsConfig.JaeggerEndpoint)
+        //.AddMeter(OpenTelemetryConfig.Meter.Name)
+        .AddRuntimeInstrumentation()
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     });
 
@@ -45,6 +47,8 @@ builder.Services.AddOpenTelemetry()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("Student"));
 
 var app = builder.Build();
 
@@ -57,29 +61,29 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapGet("/GetAllStudent", async (ApplicationDbContext db) =>
+    await db.Students.ToListAsync());
 
-app.MapGet("/weatherforecast", () =>
+app.MapPost("/SaveStudent", async (Student student, ApplicationDbContext db) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    db.Students.Add(student);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/save/{student.Id}", student);
+});
+
+app.MapPut("/UpdateStudents/{id}", async (int id, Student studentinput, ApplicationDbContext db) =>
+{
+    var student = await db.Students.FindAsync(id);
+
+    if (student is null) return Results.NotFound();
+
+    student.Name = studentinput.Name;
+    student.Phone = studentinput.Phone;
+
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+});
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

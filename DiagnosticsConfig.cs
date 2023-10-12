@@ -3,7 +3,7 @@ using System.Diagnostics.Metrics;
 
 namespace OpenTelemetryDemo
 {
-    public static class DiagnosticsConfig
+    public static class OpenTelemetryConfig
     {
         public const string ServiceName = "demo-otl";
         public static Meter Meter = new Meter(ServiceName);
