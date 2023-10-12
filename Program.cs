@@ -1,4 +1,45 @@
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using OpenTelemetryDemo;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLogging(logging =>
+{
+    logging.AddOpenTelemetry(otl =>
+    {
+        otl.SetResourceBuilder(
+            ResourceBuilder
+            .CreateDefault()
+            .AddService(DiagnosticsConfig.ServiceName))
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = DiagnosticsConfig.JaeggerEndpoint)
+        .AddConsoleExporter();
+    });
+});
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resourceBuilder =>
+        resourceBuilder.AddService(DiagnosticsConfig.ServiceName)
+    )
+    .WithTracing(tracing =>
+    {
+        tracing.AddAspNetCoreInstrumentation()
+        .AddSqlClientInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation()
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = DiagnosticsConfig.JaeggerEndpoint)
+        .AddConsoleExporter();
+    })
+    .WithMetrics(metrics =>
+    {
+        metrics.AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddMeter(DiagnosticsConfig.Meter.Name)
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = DiagnosticsConfig.JaeggerEndpoint)
+        .AddConsoleExporter();
+    });
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
