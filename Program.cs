@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -26,19 +27,21 @@ builder.Services.AddOpenTelemetry()
     )
     .WithTracing(tracing =>
     {
-        tracing.AddAspNetCoreInstrumentation()
-        .AddSqlClientInstrumentation()
-        .AddHttpClientInstrumentation()
+        tracing
+        .AddAspNetCoreInstrumentation()
+        //.AddSqlClientInstrumentation()
+        //.AddHttpClientInstrumentation()
         .AddEntityFrameworkCoreInstrumentation()
         .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     })
     .WithMetrics(metrics =>
     {
-        metrics.AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
+        metrics
+        //.AddAspNetCoreInstrumentation()
+        //.AddHttpClientInstrumentation()
         //.AddMeter(OpenTelemetryConfig.Meter.Name)
-        .AddRuntimeInstrumentation()
+        //.AddRuntimeInstrumentation()
         .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     });
@@ -48,7 +51,7 @@ builder.Services.AddOpenTelemetry()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("Student"));
+builder.Services.AddDbContext<ApplicationDbContext>();
 
 var app = builder.Build();
 
@@ -64,7 +67,7 @@ app.UseHttpsRedirection();
 app.MapGet("/GetAllStudent", async (ApplicationDbContext db) =>
     await db.Students.ToListAsync());
 
-app.MapPost("/SaveStudent", async (Student student, ApplicationDbContext db) =>
+app.MapPost("/SaveStudent", async ([FromBody]Student student, ApplicationDbContext db) =>
 {
     db.Students.Add(student);
     await db.SaveChangesAsync();
@@ -72,7 +75,7 @@ app.MapPost("/SaveStudent", async (Student student, ApplicationDbContext db) =>
     return Results.Created($"/save/{student.Id}", student);
 });
 
-app.MapPut("/UpdateStudents/{id}", async (int id, Student studentinput, ApplicationDbContext db) =>
+app.MapPut("/UpdateStudents/{id}", async (int id, [FromBody] Student studentinput, ApplicationDbContext db) =>
 {
     var student = await db.Students.FindAsync(id);
 
