@@ -5,6 +5,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetryDemo;
+using OpenTelemetryDemo.EF;
 using OpenTelemetryDemo.EF.Entities;
 using OpenTelemetryDemo.Repositories;
 using OpenTelemetryDemo.Repositories.Interfaces;
@@ -46,6 +47,8 @@ builder.Services.AddOpenTelemetry()
         .AddRuntimeInstrumentation()
         .AddAspNetCoreInstrumentation()
         .AddProcessInstrumentation()
+        .AddMeter(CustomMetrics.Default.Name)
+        .AddView(CustomMetrics.UpdateStudentDelay.Name, CustomMetrics.UpdateStudentDelayView)
         .AddPrometheusExporter();
     });
 
@@ -79,6 +82,7 @@ studentsApp.MapGet("/GetId/{id}", async (int id, IStudentService studentService)
 
 studentsApp.MapPost("/Save", async ([FromBody] Student student, IStudentService studentService) =>
 {
+    CustomMetrics.StudentsCreated.Add(1);
     await studentService.SaveStudent(student);
 
     return Results.Created($"/save/{student.Id}", student);
@@ -86,6 +90,9 @@ studentsApp.MapPost("/Save", async ([FromBody] Student student, IStudentService 
 
 studentsApp.MapPut("/Update/{id}", async ([FromBody] Student student, IStudentService studentService) =>
 {
+    var random = new Random().Next(50, 100);
+    // publish ping delay metrics
+    CustomMetrics.UpdateStudentDelay.Record(random);
     await studentService.UpdateStudent(student);
     return Results.NoContent();
 });
