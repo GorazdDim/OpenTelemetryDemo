@@ -12,5 +12,6 @@ namespace OpenTelemetryDemo
         public static Counter<long> SalesCount = Meter.CreateCounter<long>("sales.count");
         public static ActivitySource Source = new ActivitySource(ServiceName);
         public static Uri JaeggerEndpoint = new Uri("http://localhost:4317");
+        public static Uri PrometheusEndpoint = new Uri("http://localhost:9090");
     }
 }
