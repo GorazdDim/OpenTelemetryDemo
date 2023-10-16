@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTelemetryDemo.EF\OpenTelemetryDemo.EF.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Repositories\OpenTelemetryDemo.Repositories.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>
