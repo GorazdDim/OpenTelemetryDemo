@@ -20,7 +20,6 @@ builder.Services.AddLogging(logging =>
             ResourceBuilder
             .CreateDefault()
             .AddService(OpenTelemetryConfig.ServiceName))
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     });
 });
@@ -33,21 +32,18 @@ builder.Services.AddOpenTelemetry()
     {
         tracing
         .AddAspNetCoreInstrumentation()
-        //.AddSqlClientInstrumentation()
-        //.AddHttpClientInstrumentation()
-        //.AddEntityFrameworkCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddProcessor<CustomProcessor>()
         .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     })
     .WithMetrics(metrics =>
     {
         metrics
-        //.AddAspNetCoreInstrumentation()
-        //.AddHttpClientInstrumentation()
-        //.AddMeter(OpenTelemetryConfig.Meter.Name)
-        //.AddRuntimeInstrumentation()
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
-        .AddConsoleExporter();
+        .AddRuntimeInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddAspNetCoreInstrumentation()
+        .AddPrometheusExporter();
     });
 
 // Add services to the container.
@@ -122,4 +118,6 @@ professorsApp.MapDelete("/Delete/{id}", async (int id, IProfessorService profess
     return Results.NoContent();
 });
 
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 app.Run();
