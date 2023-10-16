@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo", "OpenTelemetryDemo.csproj", "{B20A7F19-DA42-4A5A-BB7F-B001D38CFB40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo", "OpenTelemetryDemo.csproj", "{B20A7F19-DA42-4A5A-BB7F-B001D38CFB40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo.Services", "..\OpenTelemetryDemo.Services\OpenTelemetryDemo.Services.csproj", "{B0A9ABFE-0128-4EC6-AA42-DB8F35DADDCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo.EF", "..\OpenTelemetryDemo.EF\OpenTelemetryDemo.EF.csproj", "{CBF15FD1-27F6-475D-B974-B031DF2BFABB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo.Repositories", "..\OpenTelemetryDemo.Repositories\OpenTelemetryDemo.Repositories.csproj", "{68D96392-C13D-4B74-90E8-5A2935853F27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo.Repositories.Interfaces", "..\OpenTelemetryDemo.Repositories.Interfaces\OpenTelemetryDemo.Repositories.Interfaces.csproj", "{8099586E-981F-4535-9ADF-6E37D74CE79B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo.Services.Interfaces", "..\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj", "{8ED614CC-FBD2-42A0-B169-E73A6469A23F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,26 @@ Global
 		{B20A7F19-DA42-4A5A-BB7F-B001D38CFB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B20A7F19-DA42-4A5A-BB7F-B001D38CFB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B20A7F19-DA42-4A5A-BB7F-B001D38CFB40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0A9ABFE-0128-4EC6-AA42-DB8F35DADDCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0A9ABFE-0128-4EC6-AA42-DB8F35DADDCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0A9ABFE-0128-4EC6-AA42-DB8F35DADDCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0A9ABFE-0128-4EC6-AA42-DB8F35DADDCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF15FD1-27F6-475D-B974-B031DF2BFABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF15FD1-27F6-475D-B974-B031DF2BFABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF15FD1-27F6-475D-B974-B031DF2BFABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF15FD1-27F6-475D-B974-B031DF2BFABB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68D96392-C13D-4B74-90E8-5A2935853F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68D96392-C13D-4B74-90E8-5A2935853F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68D96392-C13D-4B74-90E8-5A2935853F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68D96392-C13D-4B74-90E8-5A2935853F27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8099586E-981F-4535-9ADF-6E37D74CE79B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8099586E-981F-4535-9ADF-6E37D74CE79B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8099586E-981F-4535-9ADF-6E37D74CE79B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8099586E-981F-4535-9ADF-6E37D74CE79B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ED614CC-FBD2-42A0-B169-E73A6469A23F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED614CC-FBD2-42A0-B169-E73A6469A23F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED614CC-FBD2-42A0-B169-E73A6469A23F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED614CC-FBD2-42A0-B169-E73A6469A23F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

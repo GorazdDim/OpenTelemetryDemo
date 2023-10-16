@@ -5,6 +5,10 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetryDemo;
+using OpenTelemetryDemo.Repositories;
+using OpenTelemetryDemo.Repositories.Interfaces;
+using OpenTelemetryDemo.Services;
+using OpenTelemetryDemo.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +56,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddTransient<IStudentService, StudentService>();
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 
 var app = builder.Build();
 
@@ -64,28 +70,26 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/GetAllStudent", async (ApplicationDbContext db) =>
-    await db.Students.ToListAsync());
+app.MapGet("/GetAllStudent", async (IStudentService studentService) => await studentService.GetAllStudents());
 
-app.MapPost("/SaveStudent", async ([FromBody]Student student, ApplicationDbContext db) =>
+app.MapGet("/GetStudentById/{id}", async (int id, IStudentService studentService) => await studentService.GetStudentById(id));
+
+app.MapPost("/SaveStudent", async ([FromBody] Student student, IStudentService studentService) =>
 {
-    db.Students.Add(student);
-    await db.SaveChangesAsync();
+    await studentService.SaveStudent(student);
 
     return Results.Created($"/save/{student.Id}", student);
 });
 
-app.MapPut("/UpdateStudents/{id}", async (int id, [FromBody] Student studentinput, ApplicationDbContext db) =>
+app.MapPut("/UpdateStudents/{id}", async ([FromBody] Student studentinput, IStudentService studentService) =>
 {
-    var student = await db.Students.FindAsync(id);
+    await studentService.UpdateStudent(studentinput);
+    return Results.NoContent();
+});
 
-    if (student is null) return Results.NotFound();
-
-    student.Name = studentinput.Name;
-    student.Phone = studentinput.Phone;
-
-    await db.SaveChangesAsync();
-
+app.MapDelete("/DeleteStudent/{id}", async (int id, IStudentService studentService) =>
+{
+    await studentService.DeleteStudent(id);
     return Results.NoContent();
 });
 

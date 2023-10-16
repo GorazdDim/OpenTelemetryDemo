@@ -8,12 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    </PackageReference>    
     <PackageReference Include="OpenTelemetry" Version="1.6.0" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.6.0" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.5.0-rc.1" />
@@ -24,6 +22,14 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.5.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.5.1-beta.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTelemetryDemo.EF\OpenTelemetryDemo.EF.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Repositories.Interfaces\OpenTelemetryDemo.Repositories.Interfaces.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Repositories\OpenTelemetryDemo.Repositories.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Services\OpenTelemetryDemo.Services.csproj" />
   </ItemGroup>
 
 </Project>
