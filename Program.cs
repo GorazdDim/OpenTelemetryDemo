@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetryDemo;
+using OpenTelemetryDemo.EF.Entities;
 using OpenTelemetryDemo.Repositories;
 using OpenTelemetryDemo.Repositories.Interfaces;
 using OpenTelemetryDemo.Services;
@@ -35,7 +35,7 @@ builder.Services.AddOpenTelemetry()
         .AddAspNetCoreInstrumentation()
         //.AddSqlClientInstrumentation()
         //.AddHttpClientInstrumentation()
-        .AddEntityFrameworkCoreInstrumentation()
+        //.AddEntityFrameworkCoreInstrumentation()
         .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     })
@@ -58,6 +58,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddTransient<IStudentService, StudentService>();
 builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddTransient<IProfessorService, ProfessorService>();
+builder.Services.AddTransient<IProfessorRepository, ProfessorRepository>();
 
 var app = builder.Build();
 
@@ -70,26 +72,53 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/GetAllStudent", async (IStudentService studentService) => await studentService.GetAllStudents());
+var studentsApp = app.MapGroup("/students");
 
-app.MapGet("/GetStudentById/{id}", async (int id, IStudentService studentService) => await studentService.GetStudentById(id));
+studentsApp.MapGet("/GetAll", async (IStudentService studentService) => await studentService.GetAllStudents());
 
-app.MapPost("/SaveStudent", async ([FromBody] Student student, IStudentService studentService) =>
+studentsApp.MapGet("/GetId/{id}", async (int id, IStudentService studentService) => await studentService.GetStudentById(id));
+
+studentsApp.MapPost("/Save", async ([FromBody] Student student, IStudentService studentService) =>
 {
     await studentService.SaveStudent(student);
 
     return Results.Created($"/save/{student.Id}", student);
 });
 
-app.MapPut("/UpdateStudents/{id}", async ([FromBody] Student studentinput, IStudentService studentService) =>
+studentsApp.MapPut("/Update/{id}", async ([FromBody] Student student, IStudentService studentService) =>
 {
-    await studentService.UpdateStudent(studentinput);
+    await studentService.UpdateStudent(student);
     return Results.NoContent();
 });
 
-app.MapDelete("/DeleteStudent/{id}", async (int id, IStudentService studentService) =>
+studentsApp.MapDelete("/Delete/{id}", async (int id, IStudentService studentService) =>
 {
     await studentService.DeleteStudent(id);
+    return Results.NoContent();
+});
+
+var professorsApp = app.MapGroup("/professors");
+
+professorsApp.MapGet("/GetAll", async (IProfessorService professorService) => await professorService.GetAllProfessors());
+
+professorsApp.MapGet("/GetId/{id}", async (int id, IProfessorService professorService) => await professorService.GetProfessorById(id));
+
+professorsApp.MapPost("/Save", async ([FromBody] Professor professor, IProfessorService professorService) =>
+{
+    await professorService.SaveProfessor(professor);
+
+    return Results.Created($"/save/{professor.Id}", professor);
+});
+
+professorsApp.MapPut("/Update/{id}", async ([FromBody] Professor professor, IProfessorService professorService) =>
+{
+    await professorService.UpdateProfessor(professor);
+    return Results.NoContent();
+});
+
+professorsApp.MapDelete("/Delete/{id}", async (int id, IProfessorService professorService) =>
+{
+    await professorService.DeleteProfessor(id);
     return Results.NoContent();
 });
 
