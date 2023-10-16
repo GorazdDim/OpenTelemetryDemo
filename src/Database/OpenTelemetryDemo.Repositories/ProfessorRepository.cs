@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenTelemetryDemo.EF.Entities;
 using OpenTelemetryDemo.Repositories.Interfaces;
+using System.Diagnostics;
 
 namespace OpenTelemetryDemo.Repositories
 {
@@ -15,7 +16,16 @@ namespace OpenTelemetryDemo.Repositories
 
         public async Task<List<Professor>> GetAllProfessors()
         {
-            return await _applicationDbContext.Professors.ToListAsync();
+            using (var activity = CustomTraces.Default.StartActivity("GetAllProfessorsRepositoryMethod"))
+            {
+                activity?.SetTag("instance.type", GetType());
+                var source = Activity.Current?.GetBaggageItem("sample.Source");
+                if (string.IsNullOrWhiteSpace(source))
+                    activity?.SetTag("instance.parentSource", string.Empty);
+                else
+                    activity?.SetTag("instance.parentSource", source);
+                return await _applicationDbContext.Professors.ToListAsync();
+            }
         }
 
         public async Task<Professor> GetProfessorById(int id)

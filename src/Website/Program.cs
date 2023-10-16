@@ -1,3 +1,4 @@
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -33,7 +34,9 @@ builder.Services.AddOpenTelemetry()
         tracing
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation()
         .AddProcessor<CustomProcessor>()
+        .AddSource(CustomTraces.Default.Name)
         .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
         .AddConsoleExporter();
     })
@@ -95,7 +98,20 @@ studentsApp.MapDelete("/Delete/{id}", async (int id, IStudentService studentServ
 
 var professorsApp = app.MapGroup("/professors");
 
-professorsApp.MapGet("/GetAll", async (IProfessorService professorService) => await professorService.GetAllProfessors());
+professorsApp.MapGet("/GetAll", async (HttpContext context, IProfessorService professorService) => {
+    using (var activity = CustomTraces.Default.StartActivity("GetAllProfessorsEndpoint"))
+    {
+        activity?.SetTag("http.method", context.Request.Method);
+        activity?.SetTag("http.url", context.Request.Path);
+        activity?.SetTag("http.host", context.Request.Host.Value);
+        activity?.SetTag("http.scheme", context.Request.Scheme);
+
+        var random = new Random().Next(50, 100);
+        await Task.Delay(random);
+        activity?.SetTag("otl-demo.delay", random);
+        return await professorService.GetAllProfessors();
+    }    
+});
 
 professorsApp.MapGet("/GetId/{id}", async (int id, IProfessorService professorService) => await professorService.GetProfessorById(id));
 
