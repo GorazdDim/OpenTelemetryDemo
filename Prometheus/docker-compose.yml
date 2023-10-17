@@ -1,0 +1,12 @@
+version: '3'
+networks:
+  default:
+    external:
+      name: opentelemetrydemoaspnet_default
+services:
+  prometheus:
+    image: prom/prometheus:v2.26.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"

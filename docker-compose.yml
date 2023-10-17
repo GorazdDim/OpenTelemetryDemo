@@ -1,0 +1,20 @@
+version: '3.4'
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  otel-app:
+    image: otel-app
+    container_name: otelapp-services
+    ports:
+      - "8088:80"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=172.22.192.1,1433;Database=OpenTelemetryDemo;TrustServerCertificate=True;User ID=GDimovski;Password=Gorazd2023!;
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - dev  
