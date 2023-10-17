@@ -1,13 +1,16 @@
 version: '3.4'
-
-networks:
-  dev:
-    driver: bridge
-
 services:
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/opentelemetry-all-in-one
+    ports:
+      - "13133:13133"
+      - "16686:16686"
+      - "4317:4317"
+    restart: unless-stopped
   otel-app:
     image: otel-app
-    container_name: otelapp-services
+    container_name: otel-app
     ports:
       - "8088:80"
     build:
@@ -16,5 +19,5 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=172.22.192.1,1433;Database=OpenTelemetryDemo;TrustServerCertificate=True;User ID=GDimovski;Password=Gorazd2023!;
       - ASPNETCORE_URLS=http://+:80
-    networks:
-      - dev  
+      - Jaeger__AgentHost=192.168.80.2
+      - Jaeger__AgentPort=4317

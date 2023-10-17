@@ -1,4 +1,3 @@
-using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Logs;
@@ -15,6 +14,10 @@ using OpenTelemetryDemo.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var agentHost = builder.Configuration.GetSection("Jaeger:AgentHost").Get<string>();
+var agentPort = builder.Configuration.GetSection("Jaeger:AgentPort").Get<int>();
+var jaeggerEndpoint = new Uri("http://" + agentHost + ":" + agentPort);
+
 builder.Services.AddLogging(logging =>
 {
     logging.AddOpenTelemetry(otl =>
@@ -27,6 +30,8 @@ builder.Services.AddLogging(logging =>
     });
 });
 
+var logger = builder.Logging.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Endpoint is " + jaeggerEndpoint.ToString());
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resourceBuilder =>
         resourceBuilder.AddService(OpenTelemetryConfig.ServiceName)
@@ -39,7 +44,7 @@ builder.Services.AddOpenTelemetry()
         .AddEntityFrameworkCoreInstrumentation()
         .AddProcessor<CustomProcessor>()
         .AddSource(CustomTraces.Default.Name)
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = OpenTelemetryConfig.JaeggerEndpoint)
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = jaeggerEndpoint)
         .AddConsoleExporter();
     })
     .WithMetrics(metrics =>
@@ -111,7 +116,8 @@ studentsApp.MapDelete("/Delete/{id}", async (int id, IStudentService studentServ
 
 var professorsApp = app.MapGroup("/professors");
 
-professorsApp.MapGet("/GetAll", async (HttpContext context, IProfessorService professorService) => {
+professorsApp.MapGet("/GetAll", async (HttpContext context, IProfessorService professorService) =>
+{
     using (var activity = CustomTraces.Default.StartActivity("GetAllProfessorsEndpoint"))
     {
         activity?.SetTag("http.method", context.Request.Method);
@@ -123,7 +129,7 @@ professorsApp.MapGet("/GetAll", async (HttpContext context, IProfessorService pr
         await Task.Delay(random);
         activity?.SetTag("otl-demo.delay", random);
         return await professorService.GetAllProfessors();
-    }    
+    }
 });
 
 professorsApp.MapGet("/GetId/{id}", async (int id, IProfessorService professorService) => await professorService.GetProfessorById(id));
