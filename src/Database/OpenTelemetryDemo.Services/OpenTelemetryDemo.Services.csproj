@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\OpenTelmetryDemo.Shared\OpenTelemetryDemo.Shared.csproj" />
     <ProjectReference Include="..\OpenTelemetryDemo.EF\OpenTelemetryDemo.EF.csproj" />
-    <ProjectReference Include="..\OpenTelemetryDemo.Repositories\OpenTelemetryDemo.Repositories.csproj" />
+    <ProjectReference Include="..\OpenTelemetryDemo.Repositories.Interfaces\OpenTelemetryDemo.Repositories.Interfaces.csproj" />
     <ProjectReference Include="..\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj" />
   </ItemGroup>
 

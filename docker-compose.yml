@@ -22,6 +22,7 @@ services:
     restart: unless-stopped
     networks:
       - otel-network
+
   otel-app:
     image: otel-app
     container_name: otel-app
@@ -35,6 +36,19 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - Jaeger__AgentHost=jaeger
       - Jaeger__AgentPort=4317
+    networks:
+      - otel-network
+
+  otel-proxy-app:
+    image: otel-proxy-app
+    container_name: otel-proxy-app
+    ports:
+      - "8090:81"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:81
     networks:
       - otel-network
 

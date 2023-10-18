@@ -4,19 +4,18 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OpenTelemetryDemo;
-using OpenTelemetryDemo.EF;
 using OpenTelemetryDemo.EF.Entities;
 using OpenTelemetryDemo.Repositories;
 using OpenTelemetryDemo.Repositories.Interfaces;
 using OpenTelemetryDemo.Services;
 using OpenTelemetryDemo.Services.Interfaces;
+using OpenTelemetryDemo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var agentHost = builder.Configuration.GetSection("Jaeger:AgentHost").Get<string>();
 var agentPort = builder.Configuration.GetSection("Jaeger:AgentPort").Get<int>();
-var jaeggerEndpoint = new Uri("http://" + agentHost + ":" + agentPort);
+var jaegerEndpoint = new Uri("http://" + agentHost + ":" + agentPort);
 
 builder.Services.AddLogging(logging =>
 {
@@ -25,14 +24,14 @@ builder.Services.AddLogging(logging =>
         otl.SetResourceBuilder(
             ResourceBuilder
             .CreateDefault()
-            .AddService(OpenTelemetryConfig.ServiceName))
+            .AddService(OpenTelemetryConfig.ServiceProxyName))
         .AddConsoleExporter();
     });
 });
 
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resourceBuilder =>
-        resourceBuilder.AddService(OpenTelemetryConfig.ServiceName)
+        resourceBuilder.AddService(OpenTelemetryConfig.ServiceProxyName)
     )
     .WithTracing(tracing =>
     {
@@ -42,7 +41,7 @@ builder.Services.AddOpenTelemetry()
         .AddEntityFrameworkCoreInstrumentation()
         .AddProcessor<CustomProcessor>()
         .AddSource(CustomTraces.Default.Name)
-        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = jaeggerEndpoint)
+        .AddOtlpExporter(otlpExp => otlpExp.Endpoint = jaegerEndpoint)
         .AddConsoleExporter();
     })
     .WithMetrics(metrics =>
@@ -116,18 +115,16 @@ var professorsApp = app.MapGroup("/professors");
 
 professorsApp.MapGet("/GetAll", async (HttpContext context, IProfessorService professorService) =>
 {
-    using (var activity = CustomTraces.Default.StartActivity("GetAllProfessorsEndpoint"))
-    {
-        activity?.SetTag("http.method", context.Request.Method);
-        activity?.SetTag("http.url", context.Request.Path);
-        activity?.SetTag("http.host", context.Request.Host.Value);
-        activity?.SetTag("http.scheme", context.Request.Scheme);
+    using var activity = CustomTraces.Default.StartActivity("GetAllProfessorsEndpoint");
+    activity?.SetTag("http.method", context.Request.Method);
+    activity?.SetTag("http.url", context.Request.Path);
+    activity?.SetTag("http.host", context.Request.Host.Value);
+    activity?.SetTag("http.scheme", context.Request.Scheme);
 
-        var random = new Random().Next(50, 100);
-        await Task.Delay(random);
-        activity?.SetTag("otl-demo.delay", random);
-        return await professorService.GetAllProfessors();
-    }
+    var random = new Random().Next(50, 100);
+    await Task.Delay(random);
+    activity?.SetTag("otl-demo.delay", random);
+    return await professorService.GetAllProfessors();
 });
 
 professorsApp.MapGet("/GetId/{id}", async (int id, IProfessorService professorService) => await professorService.GetProfessorById(id));

@@ -1,9 +1,9 @@
 ﻿using OpenTelemetry;
 using System.Diagnostics;
 
-namespace OpenTelemetryDemo
+namespace OpenTelemetryDemo.Shared
 {
-    internal sealed class CustomProcessor : BaseProcessor<Activity>
+    public class CustomProcessor : BaseProcessor<Activity>
     {
         public override void OnEnd(Activity activity)
         {
