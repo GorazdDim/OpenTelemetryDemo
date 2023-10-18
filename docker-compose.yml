@@ -1,4 +1,5 @@
 version: '3.4'
+
 services:
   prometheus:
     container_name: prometheus
@@ -7,6 +8,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - otel-network
   jaeger:
     container_name: jaeger
     image: jaegertracing/opentelemetry-all-in-one
@@ -15,6 +18,8 @@ services:
       - "16686:16686"
       - "4317:4317"
     restart: unless-stopped
+    networks:
+      - otel-network
   otel-app:
     image: otel-app
     container_name: otel-app
@@ -26,5 +31,11 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=172.22.192.1,1433;Database=OpenTelemetryDemo;TrustServerCertificate=True;User ID=GDimovski;Password=Gorazd2023!;
       - ASPNETCORE_URLS=http://+:80
-      - Jaeger__AgentHost=192.168.80.2
+      - Jaeger__AgentHost=jaeger
       - Jaeger__AgentPort=4317
+    networks:
+      - otel-network
+
+networks:
+  otel-network:
+    driver: bridge
