@@ -30,8 +30,6 @@ builder.Services.AddLogging(logging =>
     });
 });
 
-var logger = builder.Logging.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
-logger.LogInformation("Endpoint is " + jaeggerEndpoint.ToString());
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resourceBuilder =>
         resourceBuilder.AddService(OpenTelemetryConfig.ServiceName)
@@ -99,7 +97,7 @@ studentsApp.MapPost("/Save", async ([FromBody] Student student, IStudentService 
     return Results.Created($"/save/{student.Id}", student);
 });
 
-studentsApp.MapPut("/Update/{id}", async ([FromBody] Student student, IStudentService studentService) =>
+studentsApp.MapPut("/Update", async ([FromBody] Student student, IStudentService studentService) =>
 {
     var random = new Random().Next(50, 100);
     // publish ping delay metrics

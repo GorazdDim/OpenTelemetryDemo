@@ -1,6 +1,9 @@
+
 scrape_configs:
-  - job_name: otel_demo
-    scrape_interval: 15s
-    static_configs:
-      - targets:
-        - otel-app:8088
+  - job_name: otel-demo
+    scrape_interval: 10s
+    dns_sd_configs:
+      - names:
+        - otel-app
+        type: 'A'
+        port: 80
