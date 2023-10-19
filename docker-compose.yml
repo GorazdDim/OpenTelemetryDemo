@@ -34,6 +34,7 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=172.22.192.1,1433;Database=OpenTelemetryDemo;TrustServerCertificate=True;User ID=GDimovski;Password=Gorazd2023!;
       - ASPNETCORE_URLS=http://+:80
+      # - ASPNETCORE_ENVIRONMENT=Development
       - Jaeger__AgentHost=jaeger
       - Jaeger__AgentPort=4317
     networks:
@@ -46,9 +47,14 @@ services:
       - "8090:81"
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_http_proxy
     environment:
       - ASPNETCORE_URLS=http://+:81
+      - Jaeger__AgentHost=jaeger
+      - Jaeger__AgentPort=4317
+      - OpenTelApp__ServiceName=otel-app
+      - OpenTelApp__ServicePort=80
+      # - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - otel-network
 

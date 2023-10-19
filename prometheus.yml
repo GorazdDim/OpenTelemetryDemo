@@ -7,3 +7,7 @@ scrape_configs:
         - otel-app
         type: 'A'
         port: 80
+      - names:
+        - otel-proxy-app
+        type: 'A'
+        port: 81

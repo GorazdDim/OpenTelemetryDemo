@@ -13,9 +13,7 @@ using OpenTelemetryDemo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var agentHost = builder.Configuration.GetSection("Jaeger:AgentHost").Get<string>();
-var agentPort = builder.Configuration.GetSection("Jaeger:AgentPort").Get<int>();
-var jaegerEndpoint = new Uri("http://" + agentHost + ":" + agentPort);
+var jaegerEndpoint = Configuration.GetJaegerEndpoint(builder.Configuration);
 
 builder.Services.AddLogging(logging =>
 {
@@ -24,14 +22,14 @@ builder.Services.AddLogging(logging =>
         otl.SetResourceBuilder(
             ResourceBuilder
             .CreateDefault()
-            .AddService(OpenTelemetryConfig.ServiceProxyName))
+            .AddService(OpenTelemetryConfig.ServiceName))
         .AddConsoleExporter();
     });
 });
 
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resourceBuilder =>
-        resourceBuilder.AddService(OpenTelemetryConfig.ServiceProxyName)
+        resourceBuilder.AddService(OpenTelemetryConfig.ServiceName)
     )
     .WithTracing(tracing =>
     {
