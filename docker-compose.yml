@@ -34,7 +34,7 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=172.22.192.1,1433;Database=OpenTelemetryDemo;TrustServerCertificate=True;User ID=GDimovski;Password=Gorazd2023!;
       - ASPNETCORE_URLS=http://+:80
-      # - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Development
       - Jaeger__AgentHost=jaeger
       - Jaeger__AgentPort=4317
     networks:
@@ -54,7 +54,7 @@ services:
       - Jaeger__AgentPort=4317
       - OpenTelApp__ServiceName=otel-app
       - OpenTelApp__ServicePort=80
-      # - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - otel-network
 

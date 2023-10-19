@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>f87687b1-0414-42ca-b02d-cb42ddb0b48a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTelmetryDemo.Shared\OpenTelemetryDemo.Shared.csproj" />
+    <ProjectReference Include="..\..\OpenTelmetryDemo.Shared\OpenTelemetryDemo.Shared.csproj" />
   </ItemGroup>
 
 </Project>

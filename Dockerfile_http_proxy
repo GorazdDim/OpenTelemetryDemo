@@ -6,11 +6,11 @@ EXPOSE 81
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["OpenTelmetryDemoHttpProxy/OpenTelmetryDemoHttpProxy.csproj", "OpenTelmetryDemoHttpProxy/"]
-COPY ["OpenTelmetryDemo.Shared/OpenTelemetryDemo.Shared.csproj", "OpenTelmetryDemo.Shared/"]
-RUN dotnet restore "OpenTelmetryDemoHttpProxy/OpenTelmetryDemoHttpProxy.csproj"
+COPY ["src/Website/OpenTelmetryDemoHttpProxy/OpenTelmetryDemoHttpProxy.csproj", "src/Website/OpenTelmetryDemoHttpProxy/"]
+COPY ["src/OpenTelmetryDemo.Shared/OpenTelemetryDemo.Shared.csproj", "src/OpenTelmetryDemo.Shared/"]
+RUN dotnet restore "src/Website/OpenTelmetryDemoHttpProxy/OpenTelmetryDemoHttpProxy.csproj"
 COPY . .
-WORKDIR "/src/OpenTelmetryDemoHttpProxy"
+WORKDIR "/src/src/Website/OpenTelmetryDemoHttpProxy"
 RUN dotnet build "OpenTelmetryDemoHttpProxy.csproj" -c Release -o /app/build
 
 FROM build AS publish

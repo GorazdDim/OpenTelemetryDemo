@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo", "src\Website\OpenTelemetryDemo.csproj", "{D4CA6068-F003-43A5-998F-99D9343EB9A6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo.EF", "src\Database\OpenTelemetryDemo.EF\OpenTelemetryDemo.EF.csproj", "{9DF405C0-16A2-4128-A849-ABEE3A651B63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo.Repositories", "src\Database\OpenTelemetryDemo.Repositories\OpenTelemetryDemo.Repositories.csproj", "{2FC09DC3-4168-45A3-8DB4-87B6A6B75E44}"
@@ -15,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo.Services"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo.Services.Interfaces", "src\Database\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj", "{24D542E3-AB8F-43B8-953D-6EEC934B982B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelmetryDemoHttpProxy", "OpenTelmetryDemoHttpProxy\OpenTelmetryDemoHttpProxy.csproj", "{F12457DA-D063-4E36-A771-EA61656586F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo.Shared", "src\OpenTelmetryDemo.Shared\OpenTelemetryDemo.Shared.csproj", "{A9363240-3330-48F4-AC73-3F1306E1AC8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetryDemo.Shared", "OpenTelmetryDemo.Shared\OpenTelemetryDemo.Shared.csproj", "{F068D6A8-65BC-40AF-B500-1248463BB66F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryDemo", "src\Website\OpenTelemetryDemo\OpenTelemetryDemo.csproj", "{983FAB1D-33D0-441B-9CDC-DC12F83CB85D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelmetryDemoHttpProxy", "src\Website\OpenTelmetryDemoHttpProxy\OpenTelmetryDemoHttpProxy.csproj", "{2B8CC13F-6470-4F8F-89E1-5FC87861E09B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D4CA6068-F003-43A5-998F-99D9343EB9A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4CA6068-F003-43A5-998F-99D9343EB9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4CA6068-F003-43A5-998F-99D9343EB9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4CA6068-F003-43A5-998F-99D9343EB9A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9DF405C0-16A2-4128-A849-ABEE3A651B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9DF405C0-16A2-4128-A849-ABEE3A651B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DF405C0-16A2-4128-A849-ABEE3A651B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,14 +45,18 @@ Global
 		{24D542E3-AB8F-43B8-953D-6EEC934B982B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24D542E3-AB8F-43B8-953D-6EEC934B982B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24D542E3-AB8F-43B8-953D-6EEC934B982B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F12457DA-D063-4E36-A771-EA61656586F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F12457DA-D063-4E36-A771-EA61656586F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F12457DA-D063-4E36-A771-EA61656586F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F12457DA-D063-4E36-A771-EA61656586F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F068D6A8-65BC-40AF-B500-1248463BB66F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F068D6A8-65BC-40AF-B500-1248463BB66F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F068D6A8-65BC-40AF-B500-1248463BB66F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F068D6A8-65BC-40AF-B500-1248463BB66F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9363240-3330-48F4-AC73-3F1306E1AC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9363240-3330-48F4-AC73-3F1306E1AC8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9363240-3330-48F4-AC73-3F1306E1AC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9363240-3330-48F4-AC73-3F1306E1AC8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{983FAB1D-33D0-441B-9CDC-DC12F83CB85D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{983FAB1D-33D0-441B-9CDC-DC12F83CB85D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{983FAB1D-33D0-441B-9CDC-DC12F83CB85D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{983FAB1D-33D0-441B-9CDC-DC12F83CB85D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B8CC13F-6470-4F8F-89E1-5FC87861E09B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B8CC13F-6470-4F8F-89E1-5FC87861E09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B8CC13F-6470-4F8F-89E1-5FC87861E09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B8CC13F-6470-4F8F-89E1-5FC87861E09B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

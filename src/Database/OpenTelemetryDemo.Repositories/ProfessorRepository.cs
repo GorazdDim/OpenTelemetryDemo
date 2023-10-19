@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenTelemetryDemo.EF.Entities;
 using OpenTelemetryDemo.Repositories.Interfaces;
-using OpenTelemetryDemo.Shared;
 using System.Diagnostics;
+using OpenTelemetryDemo.Shared;
 
 namespace OpenTelemetryDemo.Repositories
 {

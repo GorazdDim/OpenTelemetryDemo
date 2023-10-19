@@ -25,10 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Database\OpenTelemetryDemo.EF\OpenTelemetryDemo.EF.csproj" />
-    <ProjectReference Include="..\Database\OpenTelemetryDemo.Repositories.Interfaces\OpenTelemetryDemo.Repositories.Interfaces.csproj" />
-    <ProjectReference Include="..\Database\OpenTelemetryDemo.Repositories\OpenTelemetryDemo.Repositories.csproj" />
-    <ProjectReference Include="..\Database\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Database\OpenTelemetryDemo.Services.Interfaces\OpenTelemetryDemo.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\..\OpenTelmetryDemo.Shared\OpenTelemetryDemo.Shared.csproj" />
     <ProjectReference Include="..\Database\OpenTelemetryDemo.Services\OpenTelemetryDemo.Services.csproj" />
   </ItemGroup>
 

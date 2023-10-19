@@ -3,19 +3,19 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/Website/OpenTelemetryDemo.csproj", "src/Website/"]
+COPY ["src/Website/OpenTelemetryDemo/OpenTelemetryDemo.csproj", "src/Website/OpenTelemetryDemo/"]
 COPY ["src/Database/OpenTelemetryDemo.EF/OpenTelemetryDemo.EF.csproj", "src/Database/OpenTelemetryDemo.EF/"]
 COPY ["src/Database/OpenTelemetryDemo.Repositories.Interfaces/OpenTelemetryDemo.Repositories.Interfaces.csproj", "src/Database/OpenTelemetryDemo.Repositories.Interfaces/"]
 COPY ["src/Database/OpenTelemetryDemo.Repositories/OpenTelemetryDemo.Repositories.csproj", "src/Database/OpenTelemetryDemo.Repositories/"]
+COPY ["src/OpenTelmetryDemo.Shared/OpenTelemetryDemo.Shared.csproj", "src/OpenTelmetryDemo.Shared/"]
 COPY ["src/Database/OpenTelemetryDemo.Services.Interfaces/OpenTelemetryDemo.Services.Interfaces.csproj", "src/Database/OpenTelemetryDemo.Services.Interfaces/"]
 COPY ["src/Database/OpenTelemetryDemo.Services/OpenTelemetryDemo.Services.csproj", "src/Database/OpenTelemetryDemo.Services/"]
-RUN dotnet restore "src/Website/OpenTelemetryDemo.csproj"
+RUN dotnet restore "src/Website/OpenTelemetryDemo/OpenTelemetryDemo.csproj"
 COPY . .
-WORKDIR "/src/src/Website"
+WORKDIR "/src/src/Website/OpenTelemetryDemo"
 RUN dotnet build "OpenTelemetryDemo.csproj" -c Release -o /app/build
 
 FROM build AS publish
